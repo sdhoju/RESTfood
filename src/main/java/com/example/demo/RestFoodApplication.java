@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan({"controller","service"})
+@ComponentScan({"client"})
 public class RestFoodApplication {
 
 	public static void main(String[] args) {

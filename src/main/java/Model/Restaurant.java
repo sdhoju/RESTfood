@@ -1,8 +1,10 @@
 package Model;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @XmlRootElement
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Restaurant {
 	String id;
 	String name;
