@@ -6,13 +6,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Restaurant {
-	String id;
+	
+	long id;
 	String name;
 	int phone;
-	public String getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getName() {
