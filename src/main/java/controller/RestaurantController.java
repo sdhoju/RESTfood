@@ -4,6 +4,10 @@ import java.util.Hashtable;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.jsondoc.core.annotation.Api;
+import org.jsondoc.core.annotation.ApiMethod;
+import org.jsondoc.core.annotation.ApiPathParam;
+import org.jsondoc.core.pojo.ApiStage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +25,9 @@ import util.CustomErrorType;
 
 @RestController
 @RequestMapping("/restaurants")
+@Api(name="Restfood Api", 
+	description = "List of methods that manage restaurant", 
+	stage =ApiStage.UNDEFINED )
 public class RestaurantController {
     public static final Logger logger = LogManager.getLogger(RestaurantController.class.getName());
 
@@ -28,14 +35,10 @@ public class RestaurantController {
 	
 	@Autowired
 	RestaurantService rs;
-/*	@RequestMapping("/all")
-	public Hashtable<String, Restaurant> getAll(){
-		return rs.getAll();
-		
-	}*/
 	
 	// Get all Restaurant
 	@RequestMapping(value="/",method=RequestMethod.GET)
+	@ApiMethod(description = "Get all restaurants")
     public ResponseEntity<Hashtable<String, Restaurant>> listAllRestaurants() {
 		Hashtable<String, Restaurant> restaurants = rs.getAll();
         if (restaurants.isEmpty()) {
@@ -47,8 +50,10 @@ public class RestaurantController {
 	
 
 		//Get Restaurant by id
+	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getRestaurant(@PathVariable("id") long id) {
+	@ApiMethod(description = "Get restaurants by id")
+	public ResponseEntity<?> getRestaurant(@ApiPathParam(name= "id") @PathVariable("id") long id) {
        logger.info("Getting Restaurants info with id "+id);
  
         Restaurant restaurant = rs.getRestaurant(id);
@@ -63,7 +68,8 @@ public class RestaurantController {
 	
 		// Delete restaurant by id
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
+	@ApiMethod(description = "Delete Restaurants ")
+	public ResponseEntity<?> deleteUser(@ApiPathParam(name = "id") @PathVariable("id") long id) {
        logger.info("Fetching & Deleting Restaurant with id "+id);
  
         Restaurant restaurant = rs.getRestaurant(id);
@@ -78,7 +84,8 @@ public class RestaurantController {
 	
 	 //Post by id
 	   @RequestMapping(value = "/", method = RequestMethod.POST)
-	    public ResponseEntity<?> createRestaurant(@RequestBody Restaurant restaurant, UriComponentsBuilder ucBuilder) {
+	   @ApiMethod(description = "Create Restaurants ")
+	   public ResponseEntity<?> createRestaurant(@RequestBody Restaurant restaurant, UriComponentsBuilder ucBuilder) {
 	        logger.info("Creating restaruant "+ restaurant.getName());
 	 
 	        if (RestaurantService.isRestaurantExist(restaurant)) {
