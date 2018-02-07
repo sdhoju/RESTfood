@@ -1,25 +1,17 @@
 package service;
 
 import java.util.Hashtable;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.stereotype.Service;
 
 import Model.Item;
-import Model.Menu;
 import Model.Restaurant;
 import Model.RestaurantMenu;
-import repository.RestaurantRepository;
 
 @Service
 public class RestaurantService {
-	private static final AtomicLong counter = new AtomicLong();
-	
-	 public Hashtable<String, Restaurant> restaurants = new Hashtable<String, Restaurant>();
+	public Hashtable<String, Restaurant> restaurants = new Hashtable<String, Restaurant>();
 	 public Hashtable<String, RestaurantMenu> menus = new Hashtable<String, RestaurantMenu>();
 	 public Hashtable<String, Item> items = new Hashtable<String, Item>();
 
@@ -104,11 +96,17 @@ public class RestaurantService {
    public  void saveRestaurant(Restaurant restaurant) {
 	   restaurants.put(String.valueOf(restaurant.getId()), restaurant);
     }
-	
+	public void saveMenu(RestaurantMenu menu) {
+		menus.put(String.valueOf(menu.getMenuId()), menu);
+	}
 	
 	public void deleteRestById(long id) {
 		restaurants.remove(String.valueOf(id));
 	}
+	public void deleteMenuById(long id, long menuId) {
+		menus.remove(String.valueOf(menuId));
+	}
+	
 	public void deleteAllRestaurant() {
 		restaurants.clear();
 		
@@ -116,7 +114,9 @@ public class RestaurantService {
 	public   boolean isRestaurantExist(Restaurant restaurant) {
 		return getRestaurant(restaurant.getId())!=null;
 	}
-
+	public boolean isMenuExist(long id, RestaurantMenu menu) {
+		return getMenubyid(id,menu.getMenuId())!=null;
+	}
 	public RestaurantService() {
 		//This is what happens when Database doesnt work
 		
@@ -234,6 +234,9 @@ public class RestaurantService {
 		}
 	}
 	*/
+	
+	
+	
 	
 	
 

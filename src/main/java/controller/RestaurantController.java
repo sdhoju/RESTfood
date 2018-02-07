@@ -144,7 +144,6 @@ public class RestaurantController {
 	 @RequestMapping(value = "/restaurants/", method = RequestMethod.DELETE)
 	    public ResponseEntity<Restaurant> deleteAllRestaurant() {
 	        logger.info("Deleting All Users");
-	 
 	        rs.deleteAllRestaurant();
 	        return new ResponseEntity<Restaurant>(HttpStatus.NO_CONTENT);
 	    }
@@ -172,15 +171,58 @@ public class RestaurantController {
 	        logger.info("Creating restaruant "+ restaurant.getName());
 	 
 	        if (rs.isRestaurantExist(restaurant)) {
-	            logger.error("Unable to create. A User with name "+restaurant.getName()+" already exist" );
-	            return new ResponseEntity(new CustomErrorType("Unable to create. A Restaurant with name " + 
-	            restaurant.getName() + " already exist."),HttpStatus.CONFLICT);
+	            logger.error("Unable to create. A Restaurant with id "+restaurant.getId()+" already exist" );
+	            return new ResponseEntity(new CustomErrorType("Unable to create. A Restaurant with id " + 
+	            restaurant.getId() + " already exist."),HttpStatus.CONFLICT);
 	        }
 	        rs.saveRestaurant(restaurant);
 	        HttpHeaders headers = new HttpHeaders();
 	        headers.setLocation(ucBuilder.path("/{id}").buildAndExpand(restaurant.getId()).toUri());
 	        return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 	    }
+	   
+	   @RequestMapping(value = "/restaurants/{id}", method = RequestMethod.POST)
+	   @ApiMethod(description = "Create Restaurant's Menu")
+	   public ResponseEntity<?> createMenu(@ApiPathParam(name = "id") @PathVariable("id") long id, @RequestBody RestaurantMenu menu, UriComponentsBuilder ucBuilder) {
+	        logger.info("Creating Menu "+ menu.getMenuName());
+	        if (rs.isMenuExist(id,menu)) {
+	            logger.error("Unable to create. A User with id "+menu.getMenuId()+" already exist" );
+	            return new ResponseEntity(new CustomErrorType("Unable to create. A Menu with id " + 
+	            menu.getMenuId() + " already exist."),HttpStatus.CONFLICT);
+	        }
+	        rs.saveMenu(menu);
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setLocation(ucBuilder.path("/{menuId}").buildAndExpand(menu.getMenuId()).toUri());
+	        return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+	    }
+	   
+	   @RequestMapping(value = "/restaurants/{id}/menu/{id}", method = RequestMethod.DELETE)
+	   @ApiMethod(description = "Delete Restaurant's Menu")
+	   public ResponseEntity<?> deleteMenu(@ApiPathParam(name = "id") @PathVariable("id") long id, @PathVariable("menuId") long menuId) {
+	        logger.info("Deleting Menu with"+ menuId);
+	 /*
+        Restaurant restaurant = rs.getRestaurant(id);
+        if (restaurant == null) {
+            logger.error("Unable to delete. Restaurant with id {} not found."+ id);
+            return new ResponseEntity(new CustomErrorType("Unable to delete. Restaurant with id " + id + " not found."),
+                    HttpStatus.NOT_FOUND);
+        }
+        rs.deleteRestById(id);
+        return new ResponseEntity<Restaurant>(HttpStatus.NO_CONTENT);
+    }
+	        */
+	        RestaurantMenu menu=rs.getMenubyid(id, menuId);
+	        if (menu==null) {
+	            logger.error("Unable to Delete the menu with id  "+menuId );
+	            return new ResponseEntity(new CustomErrorType("Unable to Delete. A Menu with id " + 
+	            menuId+ ""),HttpStatus.NOT_FOUND);
+	        }
+	        rs.deleteMenuById(id,menuId);
+	        HttpHeaders headers = new HttpHeaders();
+	        return new ResponseEntity<RestaurantMenu>( HttpStatus.NO_CONTENT);
+	    }
+	   
+	   
 	 
 	   /*
 		/REpository
