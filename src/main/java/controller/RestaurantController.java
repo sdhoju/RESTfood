@@ -10,17 +10,19 @@ import org.apache.log4j.Logger;
 import org.jsondoc.core.annotation.*;
 import org.jsondoc.core.pojo.ApiStage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.example.demo.Menu;
+import com.example.demo.RestaurantRepository;
+
 import Model.Item;
-import Model.Menu;
 import Model.Restaurant;
 import Model.RestaurantMenu;
-import repository.RestaurantRepository;
 import service.RestaurantService;
 import util.CustomErrorType;
 
@@ -33,11 +35,26 @@ public class RestaurantController {
     public static final Logger logger = LogManager.getLogger(RestaurantController.class.getName());
 
 	
-	
+    @Qualifier("restaurantRepository")
 	@Autowired
-	RestaurantService rs;
+	private RestaurantRepository restaurantRepository;
+    @Autowired
+    RestaurantService rs;
+	//private RestaurantRepository restaurantRepository;
 	
 	
+    @RequestMapping(value="/db/menu/add",method=RequestMethod.POST) 
+    @ApiMethod(description = "Add a menu to db in menu table")// Map ONLY GET Requests
+	public List<Menu>addNewMenu (@RequestBody Menu menu) {
+		restaurantRepository.save(menu);
+		return (List<Menu>) restaurantRepository.findAll();
+    }   
+
+	@RequestMapping(value="/db/menu",method=RequestMethod.GET)
+	@ApiMethod(description = "Get all Menus from DB")
+	public List<Menu> getAllmenus() {
+		return (List<Menu>) restaurantRepository.findAll();
+	}
 	
 	// Get all Restaurant
 	@RequestMapping(value="/restaurants",method=RequestMethod.GET)

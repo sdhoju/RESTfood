@@ -1,11 +1,10 @@
-package repository;
+package com.example.demo;
 
 //import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-import Model.Menu;
-
-
+@Repository
 public interface RestaurantRepository  extends CrudRepository<Menu, Long>{
 
 }

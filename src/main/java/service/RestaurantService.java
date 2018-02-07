@@ -3,7 +3,12 @@ package service;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.example.demo.Menu;
+import com.example.demo.RestaurantRepository;
 
 import Model.Item;
 import Model.Restaurant;
@@ -15,7 +20,11 @@ public class RestaurantService {
 	 public Hashtable<String, RestaurantMenu> menus = new Hashtable<String, RestaurantMenu>();
 	 public Hashtable<String, Item> items = new Hashtable<String, Item>();
 
-
+		
+	
+	
+	
+	 
 	 public Restaurant getRestaurant(long id) {
 		
 		if(restaurants.containsKey(String.valueOf(id)))
@@ -23,6 +32,7 @@ public class RestaurantService {
 		else
 			return null;
 	}
+	 
 	public  RestaurantMenu getMenubyid(long id,long menuId) {
 		if(menus.containsKey(String.valueOf(menuId)))
 			if(menus.get(String.valueOf(menuId)).getRestId()==id) {
@@ -234,6 +244,8 @@ public class RestaurantService {
 		}
 	}
 	*/
+
+	
 	
 	
 	
