@@ -109,7 +109,10 @@ public class RestaurantService {
 	public void deleteRestById(long id) {
 		restaurants.remove(String.valueOf(id));
 	}
-	
+	public void deleteAllRestaurant() {
+		restaurants.clear();
+		
+	}
 	public   boolean isRestaurantExist(Restaurant restaurant) {
 		return getRestaurant(restaurant.getId())!=null;
 	}
@@ -231,6 +234,7 @@ public class RestaurantService {
 		}
 	}
 	*/
+	
 	
 
 	

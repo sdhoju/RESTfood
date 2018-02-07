@@ -35,8 +35,6 @@ public class RestaurantController {
 	
 	
 	@Autowired
-	
-	
 	RestaurantService rs;
 	
 	
@@ -143,12 +141,18 @@ public class RestaurantController {
         return new ResponseEntity< Item>(menu,HttpStatus.OK);
     }
 	
-	
+	 @RequestMapping(value = "/restaurants/", method = RequestMethod.DELETE)
+	    public ResponseEntity<Restaurant> deleteAllRestaurant() {
+	        logger.info("Deleting All Users");
+	 
+	        rs.deleteAllRestaurant();
+	        return new ResponseEntity<Restaurant>(HttpStatus.NO_CONTENT);
+	    }
 	
 		// Delete restaurant by id
 	@RequestMapping(value = "/restaurants/{id}", method = RequestMethod.DELETE)
 	@ApiMethod(description = "Delete Restaurants ")
-	public ResponseEntity<?> deleteUser(@ApiPathParam(name = "id") @PathVariable("id") long id) {
+	public ResponseEntity<?> deleteRestaurant(@ApiPathParam(name = "id") @PathVariable("id") long id) {
        logger.info("Fetching & Deleting Restaurant with id "+id);
  
         Restaurant restaurant = rs.getRestaurant(id);
