@@ -33,7 +33,7 @@ import util.CustomErrorType;
 @RestController
 @RequestMapping("")
 @Api(name="Restfood Api", 
-	description = "List of methods that manage restaurant", 
+	description = "List of all methods that manage Bistros", 
 	stage =ApiStage.UNDEFINED )
 public class RestaurantController {
     public static final Logger logger = LogManager.getLogger(RestaurantController.class.getName());
@@ -56,19 +56,39 @@ public class RestaurantController {
 	
     //Methods for Bistros
 	@RequestMapping(value="/db/bistros",method=RequestMethod.GET)
-	@ApiMethod(description = "Get all Restaurants")
-    public ResponseEntity<List<Bistro>> getAllItem() {
-		List<Bistro> bistro = restaurantRepository.findAll();
+	@ApiMethod(description = "Check out all the Restaurants")
+    public ResponseEntity<List<Bistro>> getAllBistro() {
+		List<Bistro> bistro = restaurantRepository.findAll();							// Get all bistros
         if (bistro.isEmpty()) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<List<Bistro>>(bistro, HttpStatus.OK);
     }
+	
+	@RequestMapping(value="/db/bistros",method=RequestMethod.POST)
+	@ApiMethod(description = "Open a Restaurant")
+    public ResponseEntity<List<Bistro>> addBistro(@RequestBody Bistro bistro) {			// add new bistro
+        if (restaurantRepository.findByName(bistro.getName())!=null) {
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }else
+        	restaurantRepository.save(bistro);
+        return new ResponseEntity<List<Bistro>>(restaurantRepository.findAll(), HttpStatus.OK);
+    }
+	
+	@RequestMapping(value="/db/bistros",method=RequestMethod.DELETE)
+	@ApiMethod(description = "Open a Restaurants")
+    public ResponseEntity<List<Bistro>> addBistro() {									//delete all bistro 
+		itemRepository.deleteAll();
+		menuRepository.deleteAll();
+        restaurantRepository.deleteAll();
+        return new ResponseEntity<List<Bistro>>( HttpStatus.NO_CONTENT);
+    }
+	
 	//Get method for Restaurant by id
 	@RequestMapping(value="/db/bistros/{restId}",method=RequestMethod.GET)
 	@ApiMethod(description = "Search for the Restaurant's info by id")
     public ResponseEntity<Bistro> getRestaurant(@ApiPathParam(name= "id") @PathVariable("restId") long id) {
-		Bistro rest =  restaurantRepository.findOne(id);
+		Bistro rest =  restaurantRepository.findOne(id);								// Get Bistro by id					
         if (rest==null) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
@@ -79,9 +99,11 @@ public class RestaurantController {
 	@RequestMapping(value="/db/bistros/{restId}",method=RequestMethod.DELETE)
 	@ApiMethod(description = "Close the restaurant")
     public ResponseEntity<Bistro> deletRestaurant(@ApiPathParam(name= "id") @PathVariable("restId") long id) {
+		deleteMenus(id);																// delete a bistro
 		restaurantRepository.delete(id);
         return new ResponseEntity<Bistro>(HttpStatus.NO_CONTENT);
     }
+	
 	
 	
 	//Method for menus
@@ -89,7 +111,7 @@ public class RestaurantController {
 	@ApiMethod(description = "Get all menus")
     public ResponseEntity<List<Menu>> getAllmenu(@ApiPathParam(name= "id") @PathVariable("restId") long id) {
 		List<Menu> menu = menuRepository.findByBistroId(id);
-        if (menu.isEmpty()) {
+        if (menu.isEmpty()) {																//get all menu for a bistro
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<List<Menu>>(menu, HttpStatus.OK);
@@ -100,7 +122,7 @@ public class RestaurantController {
     @ApiMethod(description = "Add a menu to db in menu table")
 	public ResponseEntity<List<Menu>>addNewMenu (@RequestBody Menu menu, @PathVariable("restID") long id) {
 		if(menuRepository.findOne(menu.getId())==null) {
-			menuRepository.save(menu);
+			menuRepository.save(menu);														// Post a menu in a bistro
 			return new ResponseEntity<List<Menu>>(menuRepository.findAll(), HttpStatus.OK);
 		}
 		else
@@ -109,8 +131,8 @@ public class RestaurantController {
 	
 	@RequestMapping(value="/db/bistros/{restId}/menu/",method=RequestMethod.DELETE) 
     @ApiMethod(description = "Delete all menu of a restaurant ")
-	public ResponseEntity<List<Menu>>deleteAllMenu ( @PathVariable("restId") long id) {
-			menuRepository.delete(id);
+	public ResponseEntity<List<Menu>>deleteAllMenu ( @PathVariable("restId") long id) {			//delete all menu of a bistro
+			deleteMenus(id);
 			return new ResponseEntity<List<Menu>>(HttpStatus.CONFLICT);
     } 
 	
@@ -118,12 +140,53 @@ public class RestaurantController {
 	@RequestMapping(value="/db/bistros/{restId}/menu/{menuId}",method=RequestMethod.DELETE) 
     @ApiMethod(description = "Delete a menu from database in menu table by id")
 	public ResponseEntity<List<Menu>>deleteMenu(@ApiPathParam(name= "id") @PathVariable("menuId") long menuId) {
-		menuRepository.delete(menuId);
+		menuRepository.delete(menuId);															//Delete menu of a bisto by id
 		return new ResponseEntity<List<Menu>>(menuRepository.findAll(),HttpStatus.OK); 
     } 
 	
+	@RequestMapping(value="/db/bistros/{restId}/menu/{menuId}",method=RequestMethod.GET) 
+    @ApiMethod(description = "Delete a menu from database in menu table by id")
+	public ResponseEntity<Menu> getMenu(@ApiPathParam(name= "id") @PathVariable("restId") long id, @PathVariable("menuId") long menuId) {
+		Menu menu= menuRepository.findByIdAndBistroId(menuId, id);		
+		if(menu==null)
+			return new ResponseEntity<Menu>(HttpStatus.NO_CONTENT); 	
+		else																//Get menu of a bisto by id
+			return new ResponseEntity<Menu>(menu,HttpStatus.OK); 
+    } 
 	
-	@RequestMapping(value="/db/menu/",method=RequestMethod.PUT) 
+	public void deleteMenus(long id) {
+		List<Menu> menus = menuRepository.findByBistroId(id);
+		for(Menu temp:menus) {
+			menuRepository.delete(temp);
+		}
+	}
+	
+	//for item
+	
+	@RequestMapping(value="/db/bistros/{restId}/menu/{menuId}/items",method=RequestMethod.GET) 
+    @ApiMethod(description = "Get all the items in a menu")
+	public ResponseEntity<List<restItem>>getAllitems(@ApiPathParam(name= "id") @PathVariable("menuId") long menuId) {							
+		return new ResponseEntity<List<restItem>>(itemRepository.findByMenuId(menuId),HttpStatus.OK); 
+    } 
+	
+	
+	@RequestMapping(value="/db/bistros/{restId}/menu/{menuId}/items",method=RequestMethod.DELETE) 
+    @ApiMethod(description = "Delete all the items in a menu")
+	public ResponseEntity<List<restItem>>deleteAllitems(@ApiPathParam(name= "id") @PathVariable("menuId") long menuId) {		
+		List<restItem> items=itemRepository.findByMenuId(menuId);
+		for(restItem item: items) {
+			itemRepository.delete(item);
+		}
+		return new ResponseEntity<List<restItem>>(HttpStatus.NO_CONTENT); 
+    } 
+	
+	
+	
+	
+	
+	
+	
+/*	@RequestMapping(value="/db/menu/",method=RequestMethod.PUT) 
     @ApiMethod(description = "Change a menu to db in menu table")
 	public ResponseEntity<List<Menu>>updateMenu(@RequestBody Menu menu) {
 		menuRepository.save(menu);
@@ -132,11 +195,12 @@ public class RestaurantController {
 	
 	@RequestMapping(value="/db/menu/",method=RequestMethod.DELETE) 
     @ApiMethod(description = "Change a menu to db in menu table")
-	public ResponseEntity<List<Menu>>deleteAllMenu() {
+	public ResponseEntity<List<Menu>>deleteAllMenu() {										//delete all the menu 
+		itemRepository.deleteAll();
 		menuRepository.deleteAll();;
 		return new ResponseEntity<List<Menu>>(HttpStatus.NO_CONTENT); 
     } 
-	
+	*/
 	
 	
 	

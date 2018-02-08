@@ -28,8 +28,7 @@ public class Menu implements Serializable  {
 	//long restID;
 	
 	@JsonIgnore
-	@ManyToOne(cascade =  {CascadeType.ALL})
-	@JoinColumn(name = "bistro", referencedColumnName = "id")
+	@ManyToOne
 	private Bistro bistro;
 	
 	public Menu() {
