@@ -15,7 +15,7 @@ import org.hibernate.annotations.Cascade;
 @Entity
 public class Bistro {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	//@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
 	
 	

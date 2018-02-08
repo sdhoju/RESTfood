@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 public class Menu implements Serializable  {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	//@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
 	//Restaurant restaurant;
@@ -33,11 +33,10 @@ public class Menu implements Serializable  {
 	
 	public Menu() {
 	}
-	public Menu(long id, String name, long restId) {
+	public Menu(long id, String name) {
 	super();
 	this.id=id;
 	this.name=name;
-	this.bistro= new Bistro(restId,"",0);
 	}
 	
 
