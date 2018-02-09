@@ -36,6 +36,8 @@ import util.CustomErrorType;
 	description = "List of all methods that manage Bistros", 
 	stage =ApiStage.UNDEFINED )
 public class RestaurantController {
+	
+
     public static final Logger logger = LogManager.getLogger(RestaurantController.class.getName());
 
 	//Calling Repositories
@@ -71,6 +73,7 @@ public class RestaurantController {
 	@ApiMethod(description = "Open a Restaurant")
     public ResponseEntity<List<Bistro>> addBistro(@RequestBody Bistro bistro) {			// add new bistro
         if (restaurantRepository.findByName(bistro.getName())!=null) {
+        	System.out.println(restaurantRepository.findByName(bistro.getName()).getName());
             return new ResponseEntity(HttpStatus.CONFLICT);
         }else
         	restaurantRepository.save(bistro);
@@ -237,24 +240,8 @@ public class RestaurantController {
     } 
 	
 	
-	
-/*	@RequestMapping(value="/db/menu/",method=RequestMethod.PUT) 
-    @ApiMethod(description = "Change a menu to db in menu table")
-	public ResponseEntity<List<Menu>>updateMenu(@RequestBody Menu menu) {
-		menuRepository.save(menu);
-		return new ResponseEntity<List<Menu>>(menuRepository.findAll(),HttpStatus.OK); 
-	} 
-	
-	@RequestMapping(value="/db/menu/",method=RequestMethod.DELETE) 
-    @ApiMethod(description = "Change a menu to db in menu table")
-	public ResponseEntity<List<Menu>>deleteAllMenu() {										//delete all the menu 
-		itemRepository.deleteAll();
-		menuRepository.deleteAll();;
-		return new ResponseEntity<List<Menu>>(HttpStatus.NO_CONTENT); 
-    } 
-	*/
-	
-	
+	//====================================================================================================
+	// Uncomment the code below to run it in the memory
 	
 	
 	/*

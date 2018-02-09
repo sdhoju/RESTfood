@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+//This is the Item Resource
 @Entity
 public class restItem  {
 	@Id
@@ -20,6 +21,7 @@ public class restItem  {
 	@JsonIgnore
 	@ManyToOne
 	private Menu menu;
+	
 	
 	public long getId() {
 		return id;
@@ -37,7 +39,9 @@ public class restItem  {
 	private double price;
 	
 	
-
+	public restItem() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getItem() {
 		return item;
 	}
@@ -50,6 +54,14 @@ public class restItem  {
 	public void setPrice(double price) {
 		this.price = price;
 	}
-
+	public restItem(long id,String name, double price) {
+		this.id=id;
+		this.item= name;
+		this.price=price;
+	}
+	public restItem(String name, double price) {
+		this.item= name;
+		this.price=price;
+	}
 	
 }

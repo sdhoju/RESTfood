@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RestaurantRepository  extends JpaRepository<Bistro, Long>{
-	public List<Bistro> findByName(String name);
+	public Bistro findByName(String name);
 }
