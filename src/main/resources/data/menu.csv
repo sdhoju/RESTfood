@@ -1,0 +1,29 @@
+id,name,bistro_id
+1,Breakfast,1
+2,Linch,1
+3,Dinner,1
+4,Salads,2
+5,Snacks & Sides,2
+7,Beverages,2
+8,Coffee & Tea,2
+10,Sides,3
+11,Grilled ,3
+12,Scratch made soup,5
+13,Mac and Cheese,4
+14,Pairings,5
+15,Special,4
+16,From the Garden,6
+17,Calzones and Strobmolis,6
+18,DELI SANDWICHES,7
+19,SALADS AND WRAPS,8
+20,KIDS MEALS,9
+21,BAGELS & CREAM CHEESE,9
+22,STOCK UP,10
+23,TAKE HOME,10
+24,MUFFINS,3
+25,PASTRIES,4
+26,SEAFOOD,5
+27,APPETIZER,6
+28,VEGETABLES,7
+29,Cold Dish,8
+30,left over,9
